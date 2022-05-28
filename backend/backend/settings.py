@@ -39,7 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     #* ----- Developer Installed Application ----
+    'corsheaders',
+    'rest_framework',
     'todo',
+    
 ]
 
 MIDDLEWARE = [
@@ -50,6 +53,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
+    #* --------- Cross Platform Authentication ------- 
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -121,3 +127,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#* Cross Platform Error Whitelist
+CORS_ORIGIN_WHITELIST = [
+     'http://localhost:3000'
+]
