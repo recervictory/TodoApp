@@ -2,16 +2,12 @@ import React, { Component } from "react";
 import Modal from "./components/Modal";
 import axios from "axios";
 
-
-
-
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       viewCompleted: false,
       todoList: [],
-
       modal: false,
       activeItem: {
         title: "",
@@ -19,7 +15,6 @@ class App extends Component {
         completed: false,
       },
     };
-    
   }
 
   componentDidMount() {
@@ -28,9 +23,9 @@ class App extends Component {
 
   refreshList = () => {
     axios
-      .get("/api/todos")
-      .then((res) => this.setState({todoList: res.data}))
-      .catch((err) => console.error(err));
+      .get("/api/todos/")
+      .then((res) => this.setState({ todoList: res.data }))
+      .catch((err) => console.log(err));
   };
 
   toggle = () => {
@@ -40,20 +35,20 @@ class App extends Component {
   handleSubmit = (item) => {
     this.toggle();
 
-    if(item.id) {
+    if (item.id) {
       axios
-        .put(`/api/todos/${item.id}`,item)
+        .put(`/api/todos/${item.id}/`, item)
         .then((res) => this.refreshList());
-        return;
+      return;
     }
     axios
-      .post('/api/todos',item)
+      .post("/api/todos/", item)
       .then((res) => this.refreshList());
   };
 
   handleDelete = (item) => {
     axios
-      .delete(`/api/todos/${item.id}`)
+      .delete(`/api/todos/${item.id}/`)
       .then((res) => this.refreshList());
   };
 
@@ -67,11 +62,11 @@ class App extends Component {
     this.setState({ activeItem: item, modal: !this.state.modal });
   };
 
-
   displayCompleted = (status) => {
     if (status) {
       return this.setState({ viewCompleted: true });
     }
+
     return this.setState({ viewCompleted: false });
   };
 
@@ -79,14 +74,14 @@ class App extends Component {
     return (
       <div className="nav nav-tabs">
         <span
-          className={this.state.viewCompleted ? "nav-link active" : "nav-link"}
           onClick={() => this.displayCompleted(true)}
+          className={this.state.viewCompleted ? "nav-link active" : "nav-link"}
         >
           Complete
         </span>
         <span
-          className={this.state.viewCompleted ? "nav-link" : "nav-link active"}
           onClick={() => this.displayCompleted(false)}
+          className={this.state.viewCompleted ? "nav-link" : "nav-link active"}
         >
           Incomplete
         </span>
@@ -97,7 +92,7 @@ class App extends Component {
   renderItems = () => {
     const { viewCompleted } = this.state;
     const newItems = this.state.todoList.filter(
-      (item) => item.completed == viewCompleted
+      (item) => item.completed === viewCompleted
     );
 
     return newItems.map((item) => (
@@ -122,7 +117,7 @@ class App extends Component {
           </button>
           <button
             className="btn btn-danger"
-            onClick={() => this.editItem(item)}
+            onClick={() => this.handleDelete(item)}
           >
             Delete
           </button>
@@ -139,9 +134,12 @@ class App extends Component {
           <div className="col-md-6 col-sm-10 mx-auto p-0">
             <div className="card p-3">
               <div className="mb-4">
-                <button className="btn btn-primary"
-                onClick={this.createItem}
-                >Add task</button>
+                <button
+                  className="btn btn-primary"
+                  onClick={this.createItem}
+                >
+                  Add task
+                </button>
               </div>
               {this.renderTabList()}
               <ul className="list-group list-group-flush border-top-0">
